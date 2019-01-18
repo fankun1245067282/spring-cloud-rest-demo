@@ -4,6 +4,8 @@ springboot版本：2.0.8
 
 rest是一种风格、规范，不是技术
 
+https://github.com/fankun1245067282/spring-cloud-rest-demo.git
+
 ##幂等
 
 PUT
@@ -1395,5 +1397,55 @@ AcceptHeaderLocaleResolver 实现 LocaleResolver
 
 结果还是英文？？？
 
-https://github.com/fankun1245067282/spring-cloud-rest-demo.git
 
+
+# 1.3 Spring Boot Jdbc
+
+## 数据源（DataSource）
+
+maven 导入
+
+```xml
+<!--jdbc-->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-jdbc</artifactId>
+</dependency>
+<!--reactive web-->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-webflux</artifactId>
+</dependency>
+<!--mysql driver-->
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <scope>runtime</scope>
+</dependency>
+```
+
+### 类型
+
+​	通用型数据源
+
+​	javax.sql.DataSource
+
+​	分布式数据源
+
+​	javax.sql.XADataSource
+
+​	嵌入式数据源
+
+​	org.springframework.datasource.embedded.EmbeddedDatabase
+
+### Spring Boot JDBC 场景演示
+
+​	单数据源场景
+
+​	多数据源场景
+
+
+
+##事务(Transaction)
+
+##Jdbc4.0(JSR-221)
