@@ -579,7 +579,7 @@ person.name=樊坤
 
 
 ```java
-import com.fankun.domain.Person;
+import Person;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
@@ -674,7 +674,7 @@ writeInternal方法，将pojo对象序列化为文本内容（properties内容�
 添加到配置中：
 
 ```java
-import com.fankun.http.message.PerpertiesPersonHttpMessageConverter;
+import PerpertiesPersonHttpMessageConverter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
