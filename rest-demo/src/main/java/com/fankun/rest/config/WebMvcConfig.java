@@ -1,6 +1,6 @@
-package com.fankun.config;
+package com.fankun.rest.config;
 
-import com.fankun.http.message.PerpertiesPersonHttpMessageConverter;
+import com.fankun.rest.http.message.PerpertiesPersonHttpMessageConverter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;

@@ -1,4 +1,4 @@
-package com.fankun.domain;
+package com.fankun.rest.domain;
 
 public class Person {
     private Long id;

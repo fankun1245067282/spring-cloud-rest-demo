@@ -1,6 +1,6 @@
-package com.fankun.controller;
+package com.fankun.rest.controller;
 
-import com.fankun.domain.Person;
+import com.fankun.rest.domain.Person;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
