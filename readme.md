@@ -1399,7 +1399,7 @@ AcceptHeaderLocaleResolver 实现 LocaleResolver
 
 
 
-# 1.3 Spring Boot Jdbc
+# 1.3 Spring Boot Jdbc（含webflux）
 
 ## 数据源（DataSource）
 
@@ -1424,7 +1424,9 @@ maven 导入
 </dependency>
 ```
 
-### 类型
+spring-boot-starter-jdbc 如果没有配置数据源，启动会报错，如果没有配置数据源，就只能把这个maven导入注释掉，再启动
+
+###类型
 
 ​	通用型数据源
 
@@ -1442,10 +1444,209 @@ maven 导入
 
 ​	单数据源场景
 
+javax.sql.DataSource
+
+### 数据库连接池技术
+
+####Apache  Commons DBCP
+
+commons-dbcp 依赖 commons-pool(老版本)
+
+commons-dbcp2 依赖 commons-pool2
+
 ​	多数据源场景
 
+####[Tomcat DBCP](http://tomcat.apache.org/tomcat-8.5-doc/jndi-datasource-examples-howto.html)
 
 
-##事务(Transaction)
 
-##Jdbc4.0(JSR-221)
+```sql
+CREATE TABLE myuser (
+	id BIGINT NOT NULL PRIMARY KEY auto_increment,
+	NAME VARCHAR (32) NOT NULL
+);
+```
+
+```properties
+spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+spring.datasource.url=jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=UTF-8
+spring.datasource.username=root
+spring.datasource.password=123456
+```
+
+
+
+
+
+## 事务(Transaction)
+
+### 重要概念
+
+#### 自动提交模式
+
+#### 事务隔离级别（Transaction isolation levels）
+
+javax.sql.Connection
+
+```java
+int TRANSACTION_READ_UNCOMMITTED = 1;
+int TRANSACTION_READ_COMMITTED   = 2;
+int TRANSACTION_REPEATABLE_READ  = 4;
+int TRANSACTION_SERIALIZABLE     = 8;
+```
+
+事务的隔离级别
+
+从上往下，级别越高，性能越差
+
+Spring Transaction实现重用了jdbc api
+
+org.springframework.transaction.annotation.Isolation-->TransactionDefinition
+
+```java
+int ISOLATION_READ_UNCOMMITTED = Connection.TRANSACTION_READ_UNCOMMITTED;
+int ISOLATION_READ_COMMITTED = Connection.TRANSACTION_READ_COMMITTED;
+int ISOLATION_REPEATABLE_READ = Connection.TRANSACTION_REPEATABLE_READ;
+int ISOLATION_SERIALIZABLE = Connection.TRANSACTION_SERIALIZABLE;
+```
+
+
+
+#### 代理执行 TransactionInterceptor
+
+@Transactional注解的方法，被代理了，要是想查看代理之后的样子，需要在方法调用的地方进行Dubugger跟踪！
+
+TransactionAspectSupport
+
+@Transactional
+
+*可以控制rollback的异常粒度：rollbackFor()以及noRollbackFor()*
+
+*可以执行事务管理器：transactionManager()*
+
+#### API实现方式
+
+org.springframework.transaction.PlatformTransactionManager
+
+
+
+@Transactional在事务传播
+
+@Transactional
+
+save(){
+
+​	//insert into DS1
+
+​	save2()//insert into DS2;save2()没有@Transactional
+
+}
+
+单独调用save2()是没有事务的，但是save()是有事务的，一起的事务
+
+
+
+#### 保护点（Savepoints）
+
+save(){
+
+​	//新建一个安全点SP1
+
+​	SP1
+
+​	SP2{
+
+​		//操作
+
+​	}catch(){
+
+​		rollback(SP2)
+
+​	}
+
+​	commit();
+
+​	release(SP1)
+
+}
+
+
+
+小马哥的github:
+
+https://github.com/mercyblitz/jsr
+
+
+
+
+
+##Spring Boot 实际使用场景
+
+Spring Boot 2.0容器使用
+
+spring webflux认启动容器是netty（嵌入式）
+
+Spring webmvc的默认启动容器是tomcat（嵌入式）
+
+
+
+Spring Boot 1.4 开始，错误分析接口
+
+org.springframework.boot.diagnostics.FailureAnalysisReporter
+
+数据源初始化
+
+org.springframework.boot.autoconfigure.jdbc.DataSourceConfiguration
+
+
+
+WebFlux
+
+Mono:0-1 个 Publisher  (类似于java8中的Optional)
+
+Flux:0-N 个 Publisher  (类似于java中的List)
+
+
+
+传统的Servlet采用的是HttpServletRequest,HttpServletResponse
+
+WebFlux采用ServerRequest,ServerResponse(不再限制于Servlet容器，可以选择自定义实现，比如Netty Web Server)
+
+
+
+
+
+
+
+## 查找异常调用链
+
+1、找到异常输出的字符串
+
+2、把字符串在project and libraries中查找（ctrl+shift+f)
+
+3、找到异常方法的方法，字段；然后查看在那里使用，右击，Find Usages,看看在哪个方法中调用
+
+4、对找到的方法进行断点，执行到断点处，查看方法栈，看看是否在Configuration中就报错了或者其他情况
+
+
+
+##问题集合
+
+问题：用reactive web,原来mvc的好多东西都不能用了？
+
+答：不是，Reactive Web还是能兼容Spring mvc的。
+
+
+
+问题：开个线程池事务控制用api方式？
+
+答：TransactionSynchronizationManager，使用大量的ThreadLocal来实现的。
+
+
+
+问题：spring boot中分布式事务有几种方式？
+
+https://docs.spring.io/spring-boot/docs/2.0.8.RELEASE/reference/htmlsingle/#boot-features-jta
+
+
+
