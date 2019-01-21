@@ -1650,3 +1650,57 @@ https://docs.spring.io/spring-boot/docs/2.0.8.RELEASE/reference/htmlsingle/#boot
 
 
 
+# 1.4 Spring Boot 初体验
+
+## 基本概念
+
+应用分为两个方面：功能性、非功能性
+
+功能性：系统所设计的业务范畴
+
+非功能性：安全、性能、监控、数据指标（CPU使用率、网卡使用率）
+
+Spring Boot 规约大于配置，大多数组件，不需要自行配置，而是自动组装！简化开发，大多数情况，使用默认即可！
+
+production-ready就是非功能性范畴
+
+opinionated 固化的
+
+
+
+独立Spring应用，不需要依赖，依赖容器（tomcat）
+
+嵌入式Tomcat Jetty
+
+外部配置：启动参数、配置文件、环境变量
+
+Profiles
+
+Logging
+
+外部应用：Servlet应用、Spring Web MVC、Spring Web Flux、WebSockets、Web Service
+
+SQL: JDBC、JPA、ORM
+
+NoSql(Not Only SQL): Redis、ElasticSearch、Hive、Hbase
+
+
+
+## Spring Boot 创建方式
+
+图形化方式：http://start.spring.io
+
+命令行方式：maven
+
+mvn archetype:generate  -DgroupId=com.fankun -DartifactId=first-sping-boot-app -Dversion=1.0.0-SNAPSHOT -DinteractiveMode=false
+
+创建之后，idea可以import project导入！
+
+interactiveMode 交互模式
+
+
+
+#### spring-webflux 目前不能和 spring-webmvc同时使用
+
+
+
